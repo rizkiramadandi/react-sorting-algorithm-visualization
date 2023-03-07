@@ -108,15 +108,11 @@ export default function Sorting({ array, setArray }) {
                 let j = i - 1
 
                 // highlight current anchor index
-                array[i].isActive = true
+                array[i].isActive = array[j].isActive = true
                 setArray([...array])
                 await delay(delayValue.current.value)
 
                 while(j >= 0 && array[j].value > key) {
-                    // highlight current active index
-                    array[j].isActive = array[j + 1].isActive = true
-                    setArray([...array])
-                    await delay(delayValue.current.value)
 
                     // swap the two index
                     let temp = array[j + 1].value
@@ -125,18 +121,27 @@ export default function Sorting({ array, setArray }) {
                     setArray([...array])
                     await delay(delayValue.current.value)
 
-                    // check if current active indexex the same as anchor index
+                    array[j + 1].isActive = false
+
+                    j -= 1
+
                     if(j + 1 !== i)
                         array[j + 1].isActive = false
-                    if(j !== i)
+                    if(j >= 0)
                         array[j].isActive = false
                     setArray([...array])
 
-                    j -= 1
+                    // highlight current active index
+                    if(j >= 0) array[j].isActive = true
+                    array[j + 1].isActive = true
+                    setArray([...array])
+                    await delay(delayValue.current.value)
                 }
 
-                // unhightlight anchor index
-                array[i].isActive = false
+                if(j >= 0) {
+                    array[j].isActive = false
+                }
+                array[i].isActive = array[j + 1].isActive = false
                 setArray([...array])
             }
             setSorting(false)
